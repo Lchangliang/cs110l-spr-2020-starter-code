@@ -36,5 +36,43 @@ fn main() {
     // Uncomment for debugging:
     // println!("random word: {}", secret_word);
 
-    // Your code here! :)
+    let mut guess_chars = Vec::new();
+    let mut unknown_chars = Vec::new();
+    let mut unknown_len = secret_word_chars.len();
+    let mut guess_time = NUM_INCORRECT_GUESSES;
+    for _i in 0..secret_word_chars.len() {
+        unknown_chars.push('-');
+    }
+    println!("Welcome to CS110L Hangman!");
+    loop {
+        if guess_time == 0 || unknown_len == 0 {
+            break;
+        }
+        println!("The word so far is {}", unknown_chars.clone().into_iter().collect::<String>());
+        println!("You have guessed the following letters: {}", 
+            guess_chars.clone().into_iter().collect::<String>());
+        println!("You have {} guesses left", guess_time);
+        print!("Please guess a letter: ");
+        io::stdout().flush().expect("Error flushing stdout.");
+        let mut guess = String::new();
+        io::stdin().read_line(&mut guess).expect("Error reading line.");
+        let guess = guess.chars().nth(0).unwrap();
+        guess_chars.push(guess);
+        let mut success = false;
+        for i in 0..secret_word_chars.len() {
+            if secret_word_chars[i] == guess && unknown_chars[i] == '-' {
+                success = true;
+                unknown_chars[i] = guess;
+                unknown_len -= 1;
+            }
+        }
+        if !success {
+            guess_time -= 1;
+        }
+    }
+    if unknown_len == 0 {
+        println!("Congratulations you guessed the secret word: {}!", secret_word);
+    } else {
+        println!("Sorry, you ran out of guesses!");
+    }
 }
