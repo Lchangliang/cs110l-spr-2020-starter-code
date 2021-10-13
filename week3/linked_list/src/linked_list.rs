@@ -1,7 +1,7 @@
 use std::fmt;
 use std::option::Option;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct LinkedList<T> {
     head: Option<Box<Node<T>>>,
     size: usize,
@@ -96,13 +96,6 @@ impl<T> Drop for LinkedList<T> {
         while let Some(mut node) = current {
             current = node.next.take();
         }
-    }
-}
-
-impl<T> Clone for LinkedList<T> 
-    where T: Clone {
-    fn clone(&self) -> Self {
-        LinkedList {head: self.head.clone(), size: self.size}
     }
 }
 
